@@ -4,7 +4,8 @@ const ProgressDisplay = ({progress}) => {
       <div className="progress-bar">
         <div
           className="progress-indicator"
-          style={ { width: progress + "%" } }></div>
+          style={ { width: progress + "%" } }>
+        </div>
       </div>
     </div>
   )

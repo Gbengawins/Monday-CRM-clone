@@ -1,19 +1,20 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-
+import { useState, useEffect, useContext } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import axios from "axios"
+import CategoriesContext from "../context"
 
 const TicketPage = ({ editMode }) => {
-
-  const [ formData, setFormData ] = useState({
+  const [formData, setFormData] = useState({
     status: "Not Started",
     progress: 0,
     timestamp: new Date().toISOString(),
   })
 
-  const editMode = false
+  const { categories, setCategories } = useContext(CategoriesContext)
 
-  const navigate = useNavigate()
+  // const editMode = false
+
+  const navigate = useNavigate();
   let { id } = useParams()
 
   const handleChange = (e) => {
@@ -27,32 +28,53 @@ const TicketPage = ({ editMode }) => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (editMode) {
-      const response = await axios.put(`http://localhost:8000/tickets/${id}`, {
+      const response = await axios.put(`http://localhost:8500/tickets/${id}`, {
         data: formData,
-      });
-      const success = response.status === 200;
+      })
+      const success = response.status === 200
       if (success) {
-        navigate("/");
+        navigate("/")
       }
     }
     if (!editMode) {
       console.log("posting");
-      const response = await axios.post("http://localhost:8000/tickets", {
+      const response = await axios.post("http://localhost:8500/tickets", {
         formData,
       });
-      const success = response.status === 200;
+      const success = response.status === 200
       if (success) {
-        navigate("/");
+        navigate("/")
       }
     }
+    if (!editMode) {
+      console.log("posting");
+      const response = await axios.post("http://localhost:8500/tickets", {
+        formData,
+      });
+      const success = response.status === 200
+      if (success) {
+        navigate("/")
+      }
+    }
+  }
+
+  const fetchData = async () => {
+    const response = await axios.get(`http://localhost:8500/tickets/${id}`)
+    console.log("AAAAAA", response)
+    setFormData(response.data.data)
   };
 
-  
+  useEffect(() => {
+    if (editMode) {
+      fetchData();
+    }
+  }, []);
 
-  const categories = [ "test1", "test2", "test3", "test4" ]
-  
+  console.log("EDITcategories", categories)
+  console.log("formData", formData.status)
+  console.log("formData.status", formData.status === "stuck")
 
   return (
     <div className="ticket">
@@ -101,7 +123,6 @@ const TicketPage = ({ editMode }) => {
             />
             <label>Priority</label>
             <div className="multiple-input-container">
-              <label htmlFor="priority">1</label>
               <input
                 id="priority-1"
                 name="priority"
@@ -110,7 +131,7 @@ const TicketPage = ({ editMode }) => {
                 value={1}
                 checked={formData.priority === 1}
               />
-              <label htmlFor="priority">2</label>
+              <label htmlFor="priority">1</label>
               <input
                 id="priority-2"
                 name="priority"
@@ -119,7 +140,7 @@ const TicketPage = ({ editMode }) => {
                 value={2}
                 checked={formData.priority === 2}
               />
-              <label htmlFor="priority">3</label>
+              <label htmlFor="priority">2</label>
               <input
                 id="priority-3"
                 name="priority"
@@ -128,7 +149,7 @@ const TicketPage = ({ editMode }) => {
                 value={3}
                 checked={formData.priority === 3}
               />
-              <label htmlFor="priority">4</label>
+              <label htmlFor="priority">3</label>
               <input
                 id="priority-4"
                 name="priority"
@@ -137,7 +158,7 @@ const TicketPage = ({ editMode }) => {
                 value={4}
                 checked={formData.priority === 4}
               />
-              <label htmlFor="priority">5</label>
+              <label htmlFor="priority">4</label>
               <input
                 id="priority-5"
                 name="priority"
@@ -146,6 +167,7 @@ const TicketPage = ({ editMode }) => {
                 value={5}
                 checked={formData.priority === 5}
               />
+              <label htmlFor="priority">5</label>
             </div>
 
             {editMode && (
@@ -161,66 +183,58 @@ const TicketPage = ({ editMode }) => {
                 />
                 <label htmlFor="progress">Progress</label>
 
-              <label>Status</label>
-              <select 
-              id="status" 
-              name="status" 
-              onChange={handleChange}
-              >
-                <option 
-                  selected={formData.status === "Done"} 
-                  value="done">
+                <label>Status</label>
+                <select id="status" name="status" onChange={handleChange}>
+                  <option selected={formData.status === "Done"} value="done">
                     Done
                   </option>
-                <option 
-                  selected={formData.status === "In Progress"} 
-                  value="In Progress">
+                  <option
+                    selected={formData.status === "In Progress"}
+                    value="In Progress"
+                  >
                     In Progress
                   </option>
-                <option 
-                  selected={formData.status === "Stuck"} 
-                  value="stuck">
+                  <option selected={formData.status === "Stuck"} value="stuck">
                     Stuck
                   </option>
-                <option 
-                  selected={formData.status === "Not Started"} 
-                  value="Not started">
+                  <option
+                    selected={formData.status === "Not Started"}
+                    value="Not started"
+                  >
                     Not Started
                   </option>
-              </select>
-            </>
+                </select>
+              </>
             )}
             <input type="submit" />
           </section>
           <section>
-              <label htmlFor="owner">Owner</label>
-              <input
-                id="owner"
-                name="owner"
-                type="text"
-                onChange={handleChange}
-                required={true}
-                value={formData.owner}
-              />
-              <label htmlFor="avatar">Avatar</label>
-              <input
-                id="avatar"
-                name="avatar"
-                type="url"
-                onChange={handleChange}
-                required={true}
-                value={formData.avatar}
+            <label htmlFor="owner">Owner</label>
+            <input
+              id="owner"
+              name="owner"
+              type="text"
+              onChange={handleChange}
+              required={true}
+              value={formData.owner}
+            />
+            <label htmlFor="avatar">Avatar</label>
+            <input
+              id="avatar"
+              name="avatar"
+              type="url"
+              onChange={handleChange}
+              required={true}
+              value={formData.avatar}
             />
             <div className="img-preview">
-              { formData.avatar && (
-                <img src={ formData.avatar } alt="preview" />
-              )}
+              {formData.avatar && <img src={formData.avatar} alt="preview" />}
             </div>
           </section>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
 export default TicketPage

@@ -7,7 +7,6 @@ const PriorityDisplay = ({priority}) => {
         <h3 style={{color: priority >=3 ? "rgb(255, 253, 150)" : ""}}>★</h3>
         <h3 style={{color: priority >=4 ? "rgb(255, 253, 150)" : ""}}>★</h3>
         <h3 style={{color: priority >=5 ? "rgb(255, 253, 150)" : ""}}>★</h3>
-        
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-const ticket = [
+const tickets = [
   {
     category: "Q1 2023",
     color: "red",
@@ -38,4 +38,4 @@ const ticket = [
     description: "Make a video showcasing Bot...",
     timestamp: "2023-02-11T13:14:14+0000",
   },
-];
+]

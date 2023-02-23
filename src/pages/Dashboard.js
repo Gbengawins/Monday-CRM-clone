@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react'
 import TicketCard from '../components/TicketCard'
+import React, { useState, useEffect, useContext } from 'react'
+import axios from "axios"
+import CategoriesContext from "../context"
 
 
 
 const Dashboard = () => {
-  const [ tickets, setTickets ] = useState(null)
-  // const { categories, setCategories } = useContext(categoriesContext)
+  const [tickets, setTickets] = useState(null)
+  const { categories, setCategories } = useContext(CategoriesContext)
 
   useEffect(async () => {
-    const response = await axios.get("http://localhost:8000/tickets");
+    const response = await axios.get("http://localhost:8500/tickets")
 
     //wasn't sure how to get the Documet Id with the object.. open to better suggestions
     const dataObject = response.data.data
 
     const arrayOfKeys = Object.keys(dataObject)
-
-    const arrayOfData = Object.keys(dataObject).map((key) => dataObject[ key ])
-    
+    const arrayOfData = Object.keys(dataObject).map((key) => dataObject[key])
     const formattedArray = []
     arrayOfKeys.forEach((key, index) => {
       const formmatedData = { ...arrayOfData[index] }
@@ -24,13 +24,12 @@ const Dashboard = () => {
       formattedArray.push(formmatedData)
     })
 
-    setTickets(formattedArray);
+    setTickets(formattedArray)
   }, [])
 
   useEffect(() => {
     setCategories([...new Set(tickets?.map(({ category }) => category))])
   }, [tickets])
-  
 
   const colors = [
     "rgb(255,179,186)",
@@ -39,12 +38,11 @@ const Dashboard = () => {
     "rgb(186,255,201)",
     "rgb(186,225,255)",
   ]
-  
+
   const uniqueCategories = [
-    ...new Set(tickets?.map(({ category}) => category))
+    ...new Set(tickets?.map(({ category }) => category)),
   ]
 
-  console.log(uniqueCategories)
   return (
     <div className="dashboard">
       <h1>My Projects</h1>
@@ -66,7 +64,7 @@ const Dashboard = () => {
           ))}
       </div>
     </div>
-  );
+  )
 }
 
 export default Dashboard

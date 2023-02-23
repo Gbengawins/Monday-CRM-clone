@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import AvatarDisplay from "./AvatarDisplay"
 import PriorityDisplay from "./PriorityDisplay"
 import ProgressDisplay from "./ProgressDisplay"
 import StatusDisplay from "./StatusDisplay"
+import AvatarDisplay from "./AvatarDisplay"
 import DeleteBlock from "./DeleteBlock"
 
 const TicketCard = ({color, ticket}) => {
